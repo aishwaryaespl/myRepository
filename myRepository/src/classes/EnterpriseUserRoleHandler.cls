@@ -17,7 +17,7 @@ public with sharing class EnterpriseUserRoleHandler {
         //create new role under parent role 
         for (String str : EntNameList ){
             String RoleName ;
-            obj = new UserRole(name= str+Label.Manager, ParentRoleId = UR.id);
+            obj = new UserRole(name= str+Label.Manager, ParentRoleId = UR.id); //custom label
             URObj.add((obj)); 
             
         }
