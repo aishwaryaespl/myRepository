@@ -1,0 +1,70 @@
+<apex:page standardController="Account" recordSetvar="accounts" extensions="MyAccountExtenstion">
+    <apex:pageBlock title="Viewing Accounts">
+    <apex:form id="theForm">
+   <!----------------------------------------------Owned by Filter---------------------------------- -->     
+        <apex:pageBlockSection title="Filter">
+        <apex:outputLabel value="Owned By:" style="font-size : small;padding-left:50px"/>
+        <apex:selectList value="{!filterId}" size="1">
+        <apex:actionSupport event="onchange" rerender="list" />
+        <apex:selectOptions value="{!listviewoptions}" />
+        </apex:selectList>
+   <!---------------------------------------Expiring in filter----------------------------------------------- -->        
+       <apex:outputLabel value="Expiring in :" style="font-size : small;padding-left:50px"/>
+        <apex:selectList value="{!SelectedDaysCount }" multiselect="false" size="1">
+        <apex:actionSupport event="onchange" action="{!PerformFilterAction}"/>
+                <apex:selectOption itemValue="0" itemLabel="---none---"/>
+                <apex:selectOption itemValue="30" itemLabel="30"/>
+                <apex:selectOption itemValue="60" itemLabel="60"/>
+                <apex:selectOption itemValue="90" itemLabel="90"/>
+                <apex:selectOption itemValue="365" itemLabel="365"/>
+        </apex:selectList>
+         </apex:pageBlockSection>   
+        <!--
+          <apex:pageBlockSection title="Filter">
+          </apex:pageBlockSection>   
+        -->
+       
+ <!--------------------------------------Account Detail Table---------------------------------------------------->   
+        <apex:pageBlockSection title="Details">
+        <apex:dataTable var="acc" value="{!accounts}" id="list" align="left" 
+                        border="1" cellspacing="2" cellpadding="2"  rows="20">
+            <!--<apex:pageblockTable var="acc" value="{!ListAcc }" id="list" align="left" border="1" cellspacing="2" cellpadding="2"  rows="20"  style="align:center;font-style:italic;border:3px" >
+                 -->
+                <apex:column headerValue="Action">
+                <apex:outputLink value="">Action</apex:outputLink>
+                </apex:column>
+                <apex:column headerValue="Account Name">
+                    {!acc.Name}
+                    
+                </apex:column>
+                <apex:column headerValue="Account Owner">
+                    {!acc.Owner.name}
+                </apex:column>
+                <apex:column headerValue="No of items for renewal">
+                    {!FLOOR(acc.CountofE__c)}
+                </apex:column>
+                <apex:column headerValue="Earliest Support End Date"  >
+                  
+                    <apex:outputField value="{!acc.Earliestdate__c}"/>
+                    
+                </apex:column>
+                
+                <apex:column headerValue="latest Support End Date">
+                     <apex:outputField value="{!acc.LatestDate__c}"/>
+                </apex:column>
+             <!--</apex:pageblockTable>-->
+              </apex:dataTable>
+        </apex:pageBlockSection>
+        
+        <apex:commandLink action="{!previous}">Previous</apex:commandlink> &nbsp; &nbsp;
+        <apex:commandLink action="{!next}">Next</apex:commandlink>
+     
+       
+  
+    </apex:form>
+    </apex:pageBlock>
+        <!-- <apex:outputPanel id="out" title="Campaign Detail Page">
+        <apex:detail subject="{!$CurrentPage.parameters.id}" relatedList="false" title="false"   /> 
+        <apex:outputlink value="#" onclick="window.open('/{!Campaign.Id}','_blank');">{!Campaign.Name}</apex:outputlink>
+        </apex:outputPanel> -->
+</apex:page>

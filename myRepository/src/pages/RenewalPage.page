@@ -1,0 +1,80 @@
+<apex:page standardController="Account" recordSetvar="Accounts" sidebar="false" showHeader="false" extensions="AccountHandler">
+    <style type = "text/css">
+       .colHeadr {text-align:center;}
+       .campStatusId {
+            position: absolute;
+            top: 30%;
+            left: 15%;
+            margin: -50px 0px 0px -50px;
+        }
+    </style>
+    <script type="text/javascript">
+    function popupwindow(){
+        var newwindow = window.open("https://ap2.salesforce.com/701?");
+        newwindow.focus();
+    }
+    </script>
+    <apex:pageBlock title="User Driven Accounts" id="PageId">
+    <!-- Refer to custom detail page -->
+        <apex:outputLink style="Float:right;padding:1px;" value="{!URLFOR($Action.Account.New)}" target="_blank">New</apex:outputLink>
+        <apex:form id="theform">
+            <apex:panelGrid columns="2">
+                <!-- List view of campaign -->
+                <apex:outputLabel value="View:">
+                    <!-- By default 'Recently modified' chosen -->
+                    <apex:selectList value="{!chosenSize}" size="1">
+                        <apex:actionSupport event="onchange" rerender="ListOfAccount"/>
+                        <apex:actionSupport action="{!ApplyFilter}" event="onchange"/>
+                        <apex:selectOptions value="{!sizeOptions}"/>
+                    </apex:selectList>
+                </apex:outputLabel>
+                <!--Filter 2 -->
+        <!--<apex:outputLabel value="Expiring in :" style="font-size : small;padding-left:50px" />
+        <apex:selectList value="{!SelectedDaysCount }" multiselect="false" size="1">
+        <apex:actionSupport event="onchange" rerender="AccntTable" action="{!ExpireLogic}" status="ajaxStatus" />
+                <apex:selectOption itemValue="0" itemLabel="---none---"/>
+                <apex:selectOption itemValue="30" itemLabel="30"/>
+                <apex:selectOption itemValue="60" itemLabel="60"/>
+                <apex:selectOption itemValue="90" itemLabel="90"/>
+                <apex:selectOption itemValue="365" itemLabel="365"/>
+        </apex:selectList>-->
+            </apex:panelGrid>
+            <!-- Table to display list of records -->
+            <apex:pageBlockTable value="{!Account}" var="item" id="ListOfAccount" border="1" rows="20">
+                <apex:column headerValue="Name" width="40%" >
+                    {!item.Name}
+                     
+                </apex:column>
+                <apex:column value="{!item.Name}"/>
+                <apex:column value="{!item.Owner.name}"/>
+                <apex:column value="{!item.CountofE__c}"/>
+                <apex:column value="{!item.Earliestdate__c}"/>
+                <apex:column value="{!item.LatestDate__c}"/>
+            </apex:pageBlockTable>
+            <!-- Footer links -->
+            <apex:outputPanel style="float:right"><br></br>
+                <apex:outputLink value="https://ap2.salesforce.com/setup/forcecomHomepage.apexp?setupid=ForceCom&retURL=%2Fui%2Fsetup%2Fapex%2FApexTestQueuePage%3FretURL%3D%252Fui%252Fsetup%252FSetup%253Fsetupid%253DDevToolsIntegrate%26setupid%3DApexTestQueue" target="_blank">Setup</apex:outputLink>
+                <apex:outputLink value="https://ap2.salesforce.com/00O/o" target="_blank"> | Reports</apex:outputLink>
+                <apex:outputLink value="https://ap2.salesforce.com/00X" target="_blank"> | Templates</apex:outputLink>
+                <apex:outputLink value="https://ap2.salesforce.com/ui/setup/Setup?setupid=EmailMessage" target="_blank"> | Email Delegation</apex:outputLink>                      
+            </apex:outputPanel> 
+            <!-- Buttons for pagination -->
+            <apex:outputPanel >
+                <apex:actionStatus id="campStatusId" startText="Loading...Please Wait...." />
+                <apex:commandButton reRender="PageId" disabled="{!!ssc.hasprevious}" action="{!ssc.First}"   value="First" status="campStatusId" />
+                <apex:commandButton reRender="PageId" disabled="{!!ssc.hasprevious}" action="{!ssc.Previous}" value="Previous" status="campStatusId"/>
+                <apex:commandButton reRender="PageId" disabled="{!!ssc.hasnext}" action="{!ssc.Next}" value="Next" status="campStatusId"/>
+                <apex:commandButton reRender="PageId" disabled="{!!ssc.hasnext}" action="{!ssc.Last}" value="Last" status="campStatusId"/>
+            </apex:outputPanel> &nbsp;&nbsp;
+                 <apex:outputLabel value="Page Size : "></apex:outputLabel>
+                    <!-- By default 'Recently modified' chosen -->
+                    <apex:selectList value="{!chosenPage}" size="1">
+                        <apex:actionSupport event="onchange" rerender="ListOfCampaign"/>
+                        <apex:actionSupport action="{!ApplyFilter}" event="onchange"/>
+                        <apex:selectOptions value="{!PageOptions}"/>
+                    </apex:selectList>
+                     &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+                     <apex:outputText value="{!PageNumber}" style="left:50%;"> Page number : </apex:outputText>
+        </apex:form>
+    </apex:pageBlock>
+</apex:page>

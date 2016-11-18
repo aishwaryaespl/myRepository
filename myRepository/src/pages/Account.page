@@ -1,0 +1,39 @@
+<apex:page controller="ListViewDemo">
+Available List Views for Account :
+  <apex:form id="pageForm">
+       <apex:selectList value="{!AccFilterId}" size="1" id="filterMenu">
+            <apex:selectOptions value="{!AccountExistingViews}"></apex:selectOptions>
+            <apex:actionSupport event="onchange"  action="{!resetFilter}" rerender="AccntTable" status="ajaxStatus"/>
+       </apex:selectList>
+
+       <apex:actionStatus id="ajaxStatus" startText="Loading..."  stopText=""/>   
+   <apex:outputLabel value="Expiring in :" style="font-size : small;padding-left:50px" />
+        <apex:selectList value="{!SelectedDaysCount }" multiselect="false" size="1">
+        <apex:actionSupport event="onchange" rerender="AccntTable" status="ajaxStatus" />
+                <!--<apex:selectOption itemValue="0" itemLabel="---none---"/>-->
+                <apex:selectOption itemValue="30" itemLabel="30"/>
+                <apex:selectOption itemValue="60" itemLabel="60"/>
+                <apex:selectOption itemValue="90" itemLabel="90"/>
+                <apex:selectOption itemValue="365" itemLabel="365"/>
+        </apex:selectList>
+         
+            
+     <apex:pageBlock title="Accounts" >
+        <apex:pageBlockButtons >
+                <apex:commandButton action="{!firstPage}" value="|<<" reRender="AccntTable"  status="ajaxStatus" />
+                <apex:commandButton action="{!prev}" value="<" reRender="AccntTable"  status="ajaxStatus" />
+                <apex:commandButton action="{!next}" value=">" reRender="AccntTable"  status="ajaxStatus" />
+                <apex:commandButton action="{!lastPage}" value=">>|" reRender="AccntTable"  status="ajaxStatus" />
+            </apex:pageBlockButtons>
+
+            <apex:pageBlockTable value="{!Accounts}" var="item" id="AccntTable">
+                <apex:column value="{!item.name}"/>
+                <apex:column value="{!item.owner.name}"/>
+                <apex:column value="{!item.CountofE__c}"/>
+                <apex:column value="{!item.Earliestdate__c}"/>
+                <apex:column value="{!item.LatestDate__c}"/>
+            </apex:pageBlockTable>
+         
+     </apex:pageBlock>
+   </apex:form>
+</apex:page>

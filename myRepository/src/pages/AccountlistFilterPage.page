@@ -1,0 +1,71 @@
+<apex:page standardController="Account" recordSetvar="Accounts" sidebar="false" showHeader="false" extensions="AccountHandlerFilter">
+    <apex:pageBlock title="User Driven Accounts" id="PageId">    
+        <!-- Refer to custom detail page -->
+        <apex:form id="theform">
+            <apex:pageBlockSection title="Filter" >
+                <!-- List view of Account -->
+                <apex:outputLabel value="View:" id="ViewLabel"/>
+           
+                <apex:selectList value="{!chosenSize}" size="1" style="height:130%" >
+                    <apex:actionSupport event="onchange" rerender="ListOfAccount" status="actStatusId"/>
+                    <apex:actionSupport action="{!ApplyFilter}" event="onchange" status="actStatusId"/>
+                    <apex:selectOptions value="{!sizeOptions}"/>
+                </apex:selectList>
+                   
+                <!--Filter 2 -->      
+                <apex:outputLabel value="Expiring in (Days):" id="Expirinlabel"/>
+                <apex:selectList value="{!SelectedDaysCount}" multiselect="false" size="1" style="height:130%">
+                    <apex:actionSupport event="onchange" rerender="ListOfAccount" action="{!ApplyFilter}" status="actStatusId" />
+                    <apex:selectOptions value="{!expiryOptions}" />
+                </apex:selectList>
+            </apex:pageBlockSection><br/>            
+            <!--Loading image-->
+            <apex:actionStatus id="actStatusId" title="Loading">
+                <apex:facet name="start" >
+                <img src="/img/loading.gif" />                    
+                </apex:facet>
+            </apex:actionStatus>   
+         
+            <!-- Table to display list of records -->
+            <apex:pageBlockTable value="{!Account}" var="acc" id="ListOfAccount" border="1" rows="20">
+                 
+                 <apex:column headerValue="{!$Label.Data_table_column1}" width="15%">
+                     <apex:outputLink value="https://myespldev-dev-ed.my.salesforce.com/{!acc.id}" target="_isblank">View</apex:outputLink>
+                 </apex:column>
+                    
+                 <apex:column headerValue="{!$Label.Data_table_column2}" width="15%">
+                     <apex:outputlink value="/{!acc.id}" target="_isblank">{!acc.name}</apex:outputlink>
+                 </apex:column>
+                    
+                 <apex:column headerValue="{!$Label.Owner}" width="15%">
+                     <apex:outputlink value="/_ui/core/userprofile/UserProfilePage?u={!acc.owner.id}" target="_isblank">{!acc.Owner.Name}</apex:outputlink>   
+                 </apex:column>
+                    
+                 <apex:column headerValue="{!$Label.No_of_items_up_for_renewal}" width="15%">
+                     {!acc.Entitlement_Filtered_Count__c }
+                 </apex:column>
+                    
+                 <apex:column headerValue="{!$Label.Earliest_Support_End_Date}" width="15%">
+                     <apex:outputfield value="{!acc.Earliestdate__c}"/>
+                 </apex:column>
+                     
+                 <apex:column headerValue="{!$Label.Latest_Support_End_Date}" width="15%">
+                     <apex:outputfield value="{!acc.LatestDate__c}"/> 
+                 </apex:column>
+              
+             </apex:pageBlockTable>
+         
+             <!-- Buttons for pagination -->
+             <apex:outputPanel >
+                 <apex:actionStatus id="campStatusId" startText="Loading...Please Wait...." />
+                 <apex:commandButton reRender="PageId" disabled="{!!ssc.hasprevious}" action="{!ssc.First}"   value="First" status="campStatusId" />
+                 <apex:commandButton reRender="PageId" disabled="{!!ssc.hasprevious}" action="{!ssc.Previous}" value="Previous" status="campStatusId"/>
+                 <apex:commandButton reRender="PageId" disabled="{!!ssc.hasnext}" action="{!ssc.Next}" value="Next" status="campStatusId"/>
+                 <apex:commandButton reRender="PageId" disabled="{!!ssc.hasnext}" action="{!ssc.Last}" value="Last" status="campStatusId"/>
+             </apex:outputPanel> &nbsp;&nbsp;
+             
+                      
+             <apex:outputText value="{!PageNumber}" style="left:50%;"> Page number : </apex:outputText>
+         </apex:form>
+    </apex:pageBlock>
+</apex:page>

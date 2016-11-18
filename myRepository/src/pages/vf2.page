@@ -1,0 +1,13 @@
+<apex:page standardcontroller="Account" recordSetvar="Accounts">
+
+
+ <apex:pageBlock title="List of Accounts">
+    <apex:pageBlockTable value="{!Accounts}" var="listofAccounts" >
+    
+        <apex:column headerValue="Name">
+            {!listofAccounts.Name}  
+        </apex:column>
+            
+    </apex:pageBlockTable>
+</apex:pageBlock>
+</apex:page>
